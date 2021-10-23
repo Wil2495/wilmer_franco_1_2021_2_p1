@@ -1,3 +1,4 @@
+import 'package:app_dogs/app/ui/breed_view.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -11,6 +12,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-        home: const Text("Inicio de app"));
+        home: BreedView());
   }
 }
