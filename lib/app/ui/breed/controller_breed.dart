@@ -8,12 +8,14 @@ class BreedController with ChangeNotifier {
     getAllBreeds();
   }
   //************** variables ********************//
-  int _countBreed = 0;
+
   List<Breed> _listBreed = [];
+  List<String> _listBreedPhotos = [];
+  int _countListBreedPhotos = 0;
   String _searchString = "";
 //************** Getters ********************//
-  get getCountInstitution => _countBreed;
-  get getListInstitutions => _listBreed;
+  get getCountPhotos => _countListBreedPhotos;
+  get getListBreedPhotos => _listBreedPhotos;
   UnmodifiableListView<Breed> get listBreed => _searchString.isEmpty
       ? UnmodifiableListView(_listBreed)
       : UnmodifiableListView(_listBreed
@@ -23,12 +25,13 @@ class BreedController with ChangeNotifier {
 //************** Method Get ********************//
   getAllBreeds() async {
     _listBreed = await getBreedsDogs();
-    _countBreed = _listBreed.length;
     notifyListeners();
+  }
 
-    String palabra = ".jpg";
-
-    palabra.indexOf("jpg");
+  getAllBreedPhotos(String breed) async {
+    _listBreedPhotos = await getBreedPhotos(breed);
+    _countListBreedPhotos = _listBreedPhotos.length;
+    notifyListeners();
   }
 
   changeSearch(String value) {
@@ -40,8 +43,8 @@ class BreedController with ChangeNotifier {
 
   @override
   void dispose() {
-    _countBreed;
     _listBreed = [];
+    _listBreedPhotos = [];
     super.dispose();
   }
   //-------------------Dispose------------------//

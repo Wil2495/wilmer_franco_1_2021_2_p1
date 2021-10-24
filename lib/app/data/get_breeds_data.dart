@@ -6,7 +6,13 @@ Future<List<Breed>> getBreedsDogs() async {
   Uri url = Uri.http('dog.ceo', "/api/breeds/list/all");
   List<Breed> _breed = [];
   try {
-    var response = await http.get(url);
+    var response = await http.get(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
     if (response.statusCode == 200) {
       Map jsonData = convert.jsonDecode(response.body);
       var data = jsonData["message"];
@@ -18,9 +24,30 @@ Future<List<Breed>> getBreedsDogs() async {
         }
       }
     }
+  } catch (e) {
+    print("sin internet");
+    print(e);
+  }
+  return _breed;
+}
+
+Future<List<String>> getBreedPhotos(String breed) async {
+  Uri url = Uri.http('dog.ceo', "/api/breed/$breed/images");
+  List<String> _breedPhotos = [];
+  try {
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      Map jsonData = convert.jsonDecode(response.body);
+      var data = jsonData["message"];
+      for (var item in data) {
+        if (item != "") {
+          _breedPhotos.add(item);
+        }
+      }
+    }
   } on Exception {
-    print("erro en el http");
+    print("error en el servidor");
   }
 
-  return _breed;
+  return _breedPhotos;
 }

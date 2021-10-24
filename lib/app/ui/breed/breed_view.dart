@@ -1,13 +1,13 @@
-import 'dart:io';
 import 'package:app_dogs/app/domain/model/Breed.dart';
 import 'package:app_dogs/app/ui/breed/controller_breed.dart';
+import 'package:app_dogs/app/ui/breed/photos_breed.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'widgets/my_card.dart';
 
 class BreedView extends StatelessWidget {
-  const BreedView({Key? key}) : super(key: key);
-
+  BreedView({Key? key}) : super(key: key);
+  List<String> photos = [];
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<BreedController>(context);
@@ -50,29 +50,37 @@ class BreedView extends StatelessWidget {
   }
 
   _listInstitution() {
-    return Consumer<BreedController>(builder: (context, BreedData, child) {
+    return Consumer<BreedController>(builder: (context, breedData, child) {
       return Expanded(
-        child: BreedData.listBreed.isNotEmpty
+        child: breedData.listBreed.isNotEmpty
             ? ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: BreedData.listBreed.length,
+                itemCount: breedData.listBreed.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Breed breed = BreedData.listBreed[index];
-                  return MyCard(
-                      child: Center(
-                          child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.pets, color: Colors.purple, size: 50),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        breed.name.toUpperCase(),
-                        style: const TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  )));
+                  Breed breed = breedData.listBreed[index];
+                  return InkWell(
+                    child: MyCard(
+                        child: Center(
+                            child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.pets, color: Colors.purple, size: 50),
+                        const SizedBox(height: 10.0),
+                        Text(breed.name.toUpperCase(),
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold)),
+                      ],
+                    ))),
+                    onTap: () async {
+                      breedData.getAllBreedPhotos(breed.name);
+                      await Future.delayed(const Duration(seconds: 1));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return PhotosBreed(name: breed.name);
+                      }));
+                    },
+                  );
                 },
               )
             : const Center(

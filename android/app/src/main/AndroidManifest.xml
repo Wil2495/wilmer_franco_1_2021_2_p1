@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.co.empresa.app_dogs">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="app_dogs"
         android:icon="@mipmap/ic_launcher">
