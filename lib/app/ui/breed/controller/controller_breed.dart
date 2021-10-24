@@ -8,7 +8,6 @@ class BreedController with ChangeNotifier {
     getAllBreeds();
   }
   //************** variables ********************//
-
   List<Breed> _listBreed = [];
   List<String> _listBreedPhotos = [];
   int _countListBreedPhotos = 0;

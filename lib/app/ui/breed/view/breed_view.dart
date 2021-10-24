@@ -1,16 +1,22 @@
 import 'package:app_dogs/app/domain/model/Breed.dart';
-import 'package:app_dogs/app/ui/breed/controller_breed.dart';
-import 'package:app_dogs/app/ui/breed/photos_breed.dart';
+import 'package:app_dogs/app/ui/breed/controller/conection.dart';
+import 'package:app_dogs/app/ui/breed/controller/controller_breed.dart';
+import 'package:app_dogs/app/ui/breed/view/conection_view.dart';
+import 'package:app_dogs/app/ui/breed/view/photos_breed.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'widgets/my_card.dart';
+import '../widgets/my_card.dart';
 
+// ignore: must_be_immutable
 class BreedView extends StatelessWidget {
   BreedView({Key? key}) : super(key: key);
+
   List<String> photos = [];
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<BreedController>(context);
+    final validarConexion = Provider.of<ConnectionController>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
@@ -19,37 +25,40 @@ class BreedView extends StatelessWidget {
             : const Center(child: Text("Sin datos")),
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-              child: TextField(
-                onChanged: (value) =>
-                    Provider.of<BreedController>(context, listen: false)
-                        .changeSearch(value),
-                decoration: const InputDecoration(
-                    fillColor: Colors.orange,
-                    labelStyle: TextStyle(color: Colors.black),
-                    hintStyle: TextStyle(color: Colors.black),
-                    labelText: "Busqueda...",
-                    hintText: "Busqueda...",
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)))),
+        child: validarConexion.isOnline == false
+            ? const SinConexion()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 10.0),
+                    child: TextField(
+                      onChanged: (value) =>
+                          Provider.of<BreedController>(context, listen: false)
+                              .changeSearch(value),
+                      decoration: const InputDecoration(
+                          fillColor: Colors.orange,
+                          labelStyle: TextStyle(color: Colors.black),
+                          hintStyle: TextStyle(color: Colors.black),
+                          labelText: "Busqueda...",
+                          hintText: "Busqueda...",
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)))),
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  _listBreed(),
+                  const SizedBox(height: 20.0),
+                ],
               ),
-            ),
-            const SizedBox(height: 20.0),
-            _listInstitution(),
-            const SizedBox(height: 20.0),
-          ],
-        ),
       ),
     );
   }
 
-  _listInstitution() {
+  _listBreed() {
     return Consumer<BreedController>(builder: (context, breedData, child) {
       return Expanded(
         child: breedData.listBreed.isNotEmpty

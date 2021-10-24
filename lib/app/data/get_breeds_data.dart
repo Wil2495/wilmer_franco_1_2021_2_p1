@@ -26,7 +26,6 @@ Future<List<Breed>> getBreedsDogs() async {
     }
   } catch (e) {
     print("sin internet");
-    print(e);
   }
   return _breed;
 }
